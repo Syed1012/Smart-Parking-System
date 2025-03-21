@@ -21,6 +21,8 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
+    implementation("org.projectlombok:lombok:1.18.30")
+
     // Database
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.liquibase:liquibase-core")
