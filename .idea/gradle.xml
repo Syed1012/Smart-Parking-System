@@ -12,7 +12,7 @@
             <option value="$PROJECT_DIR$/booking-service" />
             <option value="$PROJECT_DIR$/monitoring-service" />
             <option value="$PROJECT_DIR$/notification-service" />
-            <option value="$PROJECT_DIR$/parking-service" />
+            <option value="$PROJECT_DIR$/parkingManagement-service" />
             <option value="$PROJECT_DIR$/payment-service" />
             <option value="$PROJECT_DIR$/report-service" />
             <option value="$PROJECT_DIR$/user-service" />

@@ -40,7 +40,7 @@ tasks.test {
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-    mainClass.set("com.sps.parkingservice.ParkingServiceApplication")
+    mainClass.set("com.sps.parkingservice.ParkingManagementServiceApplication")
 }
 
 kotlin {
