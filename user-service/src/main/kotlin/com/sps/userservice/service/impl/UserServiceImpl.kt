@@ -5,10 +5,14 @@ import com.sps.userservice.entity.User
 import com.sps.userservice.mapper.UserMapper
 import com.sps.userservice.repository.UserRepository
 import com.sps.userservice.service.UserService
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class UserServiceImpl(private val userRepository: UserRepository) : UserService {
+class UserServiceImpl(
+    private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder
+) : UserService {
 
     override fun createUser(userRequestDto: UserRequestDto): User {
         // Check if user already exists by email or username
@@ -19,8 +23,11 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
             throw IllegalArgumentException("User with this username already exists.")
         }
 
-        // Map DTO to Entity
-        val user = UserMapper.toEntity(userRequestDto)
+        //Encrypt password
+        val encryptedPassword = passwordEncoder.encode(userRequestDto.password)
+
+        // Map DTO to Entity and setting encrypted password.
+        val user = UserMapper.toEntity(userRequestDto).copy(password = encryptedPassword)
 
         // Save user
         return userRepository.save(user)
