@@ -21,6 +21,9 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
+    // ✅ RabbitMQ
+    implementation("org.springframework.boot:spring-boot-starter-amqp")
+
     // Database
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.liquibase:liquibase-core")
