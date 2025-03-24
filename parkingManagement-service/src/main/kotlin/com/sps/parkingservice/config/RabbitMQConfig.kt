@@ -7,6 +7,34 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class RabbitMQConfig {
 
+    // Exchange
+    @Bean
+    fun directExchange(): DirectExchange {
+        return DirectExchange("parking.direct.exchange")
+    }
+
+    // Parking Entry Queue
+    @Bean
+    fun parkingEntryQueue(): Queue{
+        return Queue("parkingEntryQueue")
+    }
+
+    // Binding for Entry
+    @Bean
+    fun parkingEntryBinding(): Binding{
+        return BindingBuilder.bind(parkingEntryQueue())
+            .to(directExchange())
+            .with("parking.entry")
+    }
+
+    // Binding for Exit
+    @Bean
+    fun parkingExitBinding(): Binding{
+        return BindingBuilder.bind(parkingEntryQueue())
+            .to(directExchange())
+            .with("parking.exit")
+    }
+
     // Queue Declaration
     @Bean
     fun queue(): Queue {
