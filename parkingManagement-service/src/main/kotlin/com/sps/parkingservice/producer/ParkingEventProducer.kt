@@ -19,4 +19,10 @@ class ParkingEventProducer(private val rabbitTemplate: RabbitTemplate) {
         rabbitTemplate.convertAndSend("parking.fanout.exchange", "", message)
     }
     // Note: Routing key is empty ("") for fanout exchange.
+
+    fun sendTopicEvent(message: String, routingKey: String) {
+        logger.info("Sending Topic message: $message with routingKey: $routingKey")
+        rabbitTemplate.convertAndSend("parking.topic.exchange", routingKey, message)
+    }
+
 }

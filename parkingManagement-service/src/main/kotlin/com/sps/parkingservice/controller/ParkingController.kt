@@ -42,4 +42,10 @@ class ParkingController(
         parkingEventProducer.sendFanoutEvent(message)
         return "Message broadcast to all services."
     }
+
+    @PostMapping("/topic")
+    fun sendTopicEvent(@RequestBody message: String, @RequestParam routingKey: String): String {
+        parkingEventProducer.sendTopicEvent(message, routingKey)
+        return "Topic message send with routingKey: $routingKey"
+    }
 }

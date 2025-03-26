@@ -129,6 +129,18 @@ class RabbitMQConfig {
         return Queue("parkingGeneralQueue")
     }
 
+    // Bike Queue (Listens to bike.*)
+    @Bean
+    fun bikeQueue(): Queue {
+        return Queue("bikeQueue")
+    }
+
+    // Car Queue (Listens to car.*)
+    @Bean
+    fun carQueue(): Queue{
+        return Queue("carQueue")
+    }
+
     // Bindings for Topic Exchange
     @Bean
     fun parkingPaymentBinding(): Binding {
@@ -138,6 +150,16 @@ class RabbitMQConfig {
     @Bean
     fun parkingNotificationBinding(): Binding {
         return BindingBuilder.bind(parkingNotificationQueue()).to(topicExchange()).with("notification.#")
+    }
+
+    @Bean
+    fun bikeBinding(): Binding {
+        return BindingBuilder.bind(bikeQueue()).to(topicExchange()).with("bike.*")
+    }
+
+    @Bean
+    fun carBinding(): Binding{
+        return BindingBuilder.bind(carQueue()).to(topicExchange()).with("car.*")
     }
 
     @Bean
