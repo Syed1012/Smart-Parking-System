@@ -1,6 +1,7 @@
 package com.sps.parkingservice.config
 
 import org.springframework.amqp.core.*
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Retry.Topic
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -54,7 +55,7 @@ class RabbitMQConfig {
         return Queue("billingQueue")
     }
 
-    //  Notification Queue
+    // Notification Queue
     @Bean
     fun notificationQueue(): Queue {
         return Queue("notificationQueue")
@@ -66,7 +67,7 @@ class RabbitMQConfig {
         return Queue("auditQueue")
     }
 
-    // Bindings (Fanout doesn't require routing keys)
+    // Bindings for Fanout Exchange (Fanout doesn't require routing keys)
 
     // For triggering notification update in billing about any update happened
     @Bean
@@ -86,7 +87,7 @@ class RabbitMQConfig {
         return BindingBuilder.bind(auditQueue()).to(fanoutExchange())
     }
 
-    // Parking Queue Declaration
+    // Direct Exchange - Parking Queue Declaration
     @Bean
     fun queue(): Queue {
         return Queue("parkingQueue", true)
@@ -102,6 +103,46 @@ class RabbitMQConfig {
     @Bean
     fun binding(queue: Queue, exchange: DirectExchange): Binding {
         return BindingBuilder.bind(queue).to(exchange).with("parkingRoutingKey")
+    }
+
+    // Topic Exchange
+    @Bean
+    fun topicExchange(): TopicExchange {
+        return TopicExchange("parking.topic.exchange")
+    }
+
+    // Parking Payment Queue (Listens to payment.*)
+    @Bean
+    fun parkingPaymentQueue(): Queue {
+        return Queue("parkingPaymentQueue")
+    }
+
+    // Parking Notification Queue (Listens to notification.#)
+    @Bean
+    fun parkingNotificationQueue(): Queue {
+        return Queue("parkingNotificationQueue")
+    }
+
+    // Parking General Queue (Listens to parking.*)
+    @Bean
+    fun parkingGeneralQueue(): Queue {
+        return Queue("parkingGeneralQueue")
+    }
+
+    // Bindings for Topic Exchange
+    @Bean
+    fun parkingPaymentBinding(): Binding {
+        return BindingBuilder.bind(parkingPaymentQueue()).to(topicExchange()).with("payment.*")
+    }
+
+    @Bean
+    fun parkingNotificationBinding(): Binding {
+        return BindingBuilder.bind(parkingNotificationQueue()).to(topicExchange()).with("notification.#")
+    }
+
+    @Bean
+    fun parkingGeneralBinding(): Binding {
+        return BindingBuilder.bind(parkingGeneralQueue()).to(topicExchange()).with("parking.*")
     }
 
 }
