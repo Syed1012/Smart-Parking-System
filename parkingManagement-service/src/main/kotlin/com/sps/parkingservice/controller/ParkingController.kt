@@ -48,4 +48,10 @@ class ParkingController(
         parkingEventProducer.sendTopicEvent(message, routingKey)
         return "Topic message send with routingKey: $routingKey"
     }
+
+    @PostMapping("/header")
+    fun sendHeaderEvent(@RequestBody message: String, @RequestParam headers: Map<String, String>): String {
+        parkingEventProducer.sendHeaderEvent(message, headers)
+        return "Header message sent successfully with headers: $headers"
+    }
 }

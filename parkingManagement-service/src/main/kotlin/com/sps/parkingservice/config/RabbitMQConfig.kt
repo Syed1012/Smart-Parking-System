@@ -137,7 +137,7 @@ class RabbitMQConfig {
 
     // Car Queue (Listens to car.*)
     @Bean
-    fun carQueue(): Queue{
+    fun carQueue(): Queue {
         return Queue("carQueue")
     }
 
@@ -158,13 +158,55 @@ class RabbitMQConfig {
     }
 
     @Bean
-    fun carBinding(): Binding{
+    fun carBinding(): Binding {
         return BindingBuilder.bind(carQueue()).to(topicExchange()).with("car.*")
     }
 
     @Bean
     fun parkingGeneralBinding(): Binding {
         return BindingBuilder.bind(parkingGeneralQueue()).to(topicExchange()).with("parking.*")
+    }
+
+
+    // Header Exchange
+    @Bean
+    fun headerExchange(): HeadersExchange {
+        return HeadersExchange("parking.header.exchange")
+    }
+
+    // Defining Queues
+    @Bean
+    fun carHeaderQueue(): Queue{
+        return Queue("carHeaderQueue")
+    }
+
+    @Bean
+    fun bikeHeaderQueue(): Queue{
+        return Queue("bikeHeaderQueue")
+    }
+
+    @Bean
+    fun priorityQueue(): Queue{
+        return Queue("priorityQueue")
+    }
+
+    // Binding Queues to Header Exchange
+    @Bean
+    fun carHeaderBinding(): Binding{
+        return BindingBuilder.bind(carHeaderQueue()).to(headerExchange()).where("vehicleType").matches("car")
+    }
+
+    @Bean
+    fun bikeHeaderBinding(): Binding{
+        return BindingBuilder.bind(bikeHeaderQueue()).to(headerExchange()).where("vehicleType").matches("bike")
+    }
+
+    @Bean
+    fun priorityBinding(): Binding {
+        return BindingBuilder.bind(priorityQueue())
+            .to(headerExchange())
+            .whereAll(mapOf("vehicleType" to "car", "priority" to "high"))
+            .match()
     }
 
 }
